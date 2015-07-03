@@ -24,7 +24,8 @@ class AuditableBehavior extends Behavior
         'on' => ['delete', 'create', 'update'],
         'ignore' => ['created', 'updated', 'modified'],
         'habtm'  => [],
-        'json_object' => true
+        'json_object' => true,
+        'id' => 'id'
     ];
 
     /**
@@ -137,7 +138,7 @@ class AuditableBehavior extends Behavior
         $data = [
             'event' => $entity->isNew() ? 'CREATE' : 'EDIT',
             'model' => $alias,
-            'entity_id' => $entity->id,
+            'entity_id' => $entity->get($config['id']),
             'source_id' => $source['id'],
             'source_ip' => $source['ip'],
             'source_url' => $source['url'],
@@ -253,7 +254,7 @@ class AuditableBehavior extends Behavior
         $data  = [
             'event' => 'DELETE',
             'model' => $alias,
-            'entity_id' => $entity->id,
+            'entity_id' => $entity->get($config['id']),
             'source_id' => $source['id'],
             'source_ip' => $source['ip'],
             'source_url' => $source['url'],
