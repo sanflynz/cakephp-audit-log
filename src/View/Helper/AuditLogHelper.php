@@ -97,7 +97,7 @@ class AuditLogHelper extends Helper
 			'ignoreCase' => true
 		];
 
-		$diff = new \Diff((array)$old, (array)$new, $config);
+		$diff = new \Diff((array)$new, (array)$old, $config);
 		return $diff->render(new \Diff_Renderer_Html_SideBySide());
 	}
 
