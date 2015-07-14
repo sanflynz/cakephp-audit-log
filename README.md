@@ -98,6 +98,34 @@ The `AuditableBehavior` optionally allows each changeset to be "owned" by a "sou
 
 The `currentUser()` method must be available to every Table that cares to track a source of changes.
 
+Included in the plug-in is a utility trait that you can use on your table to get the current user from the current request.
+You can use it as follows:
+
+```php
+    use AuditLog\Model\Table\CurrentUserTrait;
+    
+    class TasksTable extends Table {
+      
+      use CurrentUserTrait;
+      
+      public function initialize(array $config)
+      {
+        $this->addBehavior('AuditLog.Auditable');
+      }
+      
+    }
+```
+
+Your table's will then have a ```currentUser()``` function attached that returns an array that has values filled out like this:
+
+```php
+    [
+        'id'          => Auth::User('username'),
+        'description' => Auth::User('username'),
+        'url'         => Request::here, // using the current request
+        'ip'          => env('REMOTE_ADDR'),
+    ]
+```
 
 ## Limitations
 
