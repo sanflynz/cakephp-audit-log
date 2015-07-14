@@ -24,7 +24,8 @@ class AuditableBehavior extends Behavior
         'on' => ['delete', 'create', 'update'],
         'ignore' => ['created', 'updated', 'modified'],
         'habtm'  => [],
-        'json_object' => true
+        'json_object' => true,
+        'id' => 'id'
     ];
 
     /**
@@ -137,7 +138,7 @@ class AuditableBehavior extends Behavior
         $data = [
             'event' => $entity->isNew() ? 'CREATE' : 'EDIT',
             'model' => $alias,
-            'entity_id' => $entity->id,
+            'entity_id' => $entity->get($config['id']),
             'source_id' => $source['id'],
             'source_ip' => $source['ip'],
             'source_url' => $source['url'],
@@ -186,7 +187,8 @@ class AuditableBehavior extends Behavior
         if ($entity->isNew() || count($updates)) {
             $audit = $Audits->newEntity($data);
             $audit = $Audits->save($audit);
-            if ( !$audit || !empty($audit->errors()) || empty($audit->id) ) {
+            $errors = $audit->errors();
+            if ( !$audit || !empty($errors) || empty($audit->id) ) {
                 throw new \UnexpectedValueException(
                     'Error saving audit ', print_r($audit, true)
                 );
@@ -210,7 +212,8 @@ class AuditableBehavior extends Behavior
 
             $delta = $Audits->AuditDeltas->newEntity($delta);
             $delta = $Audits->AuditDeltas->save($delta);
-            if ( !$delta || !empty($delta->errors()) || empty($delta->id) ) {
+            $errors = $delta->errors();
+            if ( !$delta || !empty($errors) || empty($delta->id) ) {
                 throw new \UnexpectedValueException(
                     'Error saving audit delta for ' . print_r($delta, true)
                 );
@@ -251,7 +254,7 @@ class AuditableBehavior extends Behavior
         $data  = [
             'event' => 'DELETE',
             'model' => $alias,
-            'entity_id' => $entity->id,
+            'entity_id' => $entity->get($config['id']),
             'source_id' => $source['id'],
             'source_ip' => $source['ip'],
             'source_url' => $source['url'],
