@@ -15,7 +15,7 @@ class AuditableBehavior extends ModelBehavior {
  *
  * @var array
  */
-	protected $_original = [];
+	protected $_original = array();
 
 /**
  * Initiate behavior for the model using specified settings.
@@ -35,18 +35,18 @@ class AuditableBehavior extends ModelBehavior {
  * @param   Model  $model      Model using the behavior
  * @param   array   $settings   Settings overrides.
  */
-	public function setup(Model $model, $settings = []) {
+	public function setup(Model $model, $settings = array()) {
 		if (empty($this->settings[$model->alias])) {
-			$this->settings[$model->alias] = [
-				'on' 		 => ['delete', 'create', 'update'],
-				'ignore' => ['created', 'updated', 'modified'],
-				'habtm'  => [],
+			$this->settings[$model->alias] = array(
+				'on' 		 => array('delete', 'create', 'update'),
+				'ignore' => array('created', 'updated', 'modified'),
+				'habtm'  => array(),
 				'json_object' => true
-			];
+			);
 		}
 
 		if (!is_array($settings)) {
-			$settings = [];
+			$settings = array();
 		}
 
 		$this->settings[$model->alias] = array_merge($this->settings[$model->alias], $settings);
@@ -78,7 +78,7 @@ class AuditableBehavior extends ModelBehavior {
  * @param array $options
  * @return boolean
  */
-	public function beforeSave(Model $model, $options = []) {
+	public function beforeSave(Model $model, $options = array()) {
 		if (!$this->_shouldProcess('create', $model) && !$this->_shouldProcess('update', $model)) {
 			return;
 		}
@@ -102,10 +102,10 @@ class AuditableBehavior extends ModelBehavior {
 			return;
 		}
 
-		$original = $model->find('first', [
+		$original = $model->find('first', array(
 			'contain'    => false,
-			'conditions' => [$model->escapeField() => $model->getID()],
-		]);
+			'conditions' => array($model->escapeField() => $model->getID()),
+		));
 
 		$this->_original[$model->alias] = $original[$model->alias];
 		return true;
@@ -119,7 +119,7 @@ class AuditableBehavior extends ModelBehavior {
  * @param   array   $options
  * @return  void
  */
-	public function afterSave(Model $model, $created, $options = []) {
+	public function afterSave(Model $model, $created, $options = array()) {
 		if ($created && !$this->_shouldProcess('create', $model)) {
 			return;
 		}
@@ -128,13 +128,15 @@ class AuditableBehavior extends ModelBehavior {
 			return;
 		}
 
-		$audit = [$model->alias => $this->_getModelData($model)];
+		$audit = array(
+            $model->alias => $this->_getModelData($model)
+        );
 		$audit[$model->alias][$model->primaryKey] = $model->id;
 
 		$source = $this->_getSource($model);
 
-		$data = [
-			'Audit' => [
+		$data = array(
+			'Audit' => array(
 				'event' => $created ? 'CREATE' : 'EDIT',
 				'model' => $model->alias,
 				'entity_id' => $model->id,
@@ -142,14 +144,14 @@ class AuditableBehavior extends ModelBehavior {
 				'source_ip' => $source['ip'],
 				'source_url' => $source['url'],
 				'description' => $source['description']
-			]
-		];
+			)
+		);
 
-		if (!empty($this->_settings[$model->alias]['json_object'])) {
+		if (!empty($this->settings[$model->alias]['json_object'])) {
 			$data['Audit']['json_object'] = json_encode($audit);
 		}
 
-		$updates = [];
+		$updates = array();
 		foreach ($audit[$model->alias] as $property => $value) {
 			// Don't create delta for new records
 			if ($created) {
@@ -176,13 +178,13 @@ class AuditableBehavior extends ModelBehavior {
 				continue;
 			}
 
-			$delta = [
-				'AuditDelta' => [
+			$delta = array(
+				'AuditDelta' => array(
 					'property_name' => $property,
 					'old_value'     => $this->_original[$model->alias][$property],
 					'new_value'     => $value
-				]
-			];
+				)
+			);
 
 			array_push($updates, $delta);
 		}
@@ -190,7 +192,11 @@ class AuditableBehavior extends ModelBehavior {
 		$audit = ClassRegistry::init('AuditLog.Audit');
 		if ($created || count($updates)) {
 			$audit->create();
-			$audit->save($data);
+			if ( !$audit->save($data) ) {
+                throw new UnexpectedValueException(
+                    'Error saving audit ' . print_r($audit, true)
+                );
+            }
 
 			if ($created && $model->hasMethod('afterAuditCreate')) {
 				$model->afterAuditCreate($model);
@@ -205,7 +211,11 @@ class AuditableBehavior extends ModelBehavior {
 			$delta['AuditDelta']['audit_id'] = $audit->id;
 
 			$audit->AuditDelta->create();
-			$audit->AuditDelta->save($delta);
+            if ( !$audit->AuditDelta->save($delta) ) {
+                throw new UnexpectedValueException(
+                    'Error saving audit delta for ' . print_r($delta, true)
+                );
+            }
 
 			if (!$created && $model->hasMethod('afterAuditProperty')) {
 				$model->afterAuditProperty(
@@ -236,10 +246,12 @@ class AuditableBehavior extends ModelBehavior {
 		}
 
 		$source = $this->_getSource($model);
-		$audit = [$model->alias => $this->_original[$model->alias]];
+		$audit = array(
+            $model->alias => $this->_original[$model->alias]
+        );
 
-		$data  = [
-			'Audit' => [
+		$data  = array(
+			'Audit' => array(
 				'event' => 'DELETE',
 				'model' => $model->alias,
 				'entity_id' => $model->id,
@@ -247,10 +259,10 @@ class AuditableBehavior extends ModelBehavior {
 				'source_ip' => $source['ip'],
 				'source_url' => $source['url'],
 				'description' => $source['description']
-			]
-		];
+			)
+		);
 
-		if ($this->_settings[$model->alias]['json_object']) {
+		if ($this->settings[$model->alias]['json_object']) {
 			$data['Audit']['json_object'] = json_encode($audit);
 		}
 
@@ -277,12 +289,12 @@ class AuditableBehavior extends ModelBehavior {
  * @return array
  */
 	protected function _getSource(Model $model) {
-		$defaults = [
+		$defaults = array(
 			'id' => null,
 			'ip' => null,
 			'url' => null,
 			'description' => null
-		];
+		);
 
 		if ($source = Configure::read('AuditSource')) {
 			return $source + $defaults;
@@ -311,14 +323,16 @@ class AuditableBehavior extends ModelBehavior {
  * @return  array
  */
 	protected function _getModelData(Model $model) {
-		$data = $model->find('first', [
-			'contain' 		=> !empty($this->settings[$model->alias]['habtm']) ? array_values($this->settings[$model->alias]['habtm']) : [],
-			'conditions' 	=> [$model->alias . '.' . $model->primaryKey => $model->id],
-		]);
+		$data = $model->find('first', array(
+			'contain' 		=> !empty($this->settings[$model->alias]['habtm']) ? array_values($this->settings[$model->alias]['habtm']) : array(),
+			'conditions' 	=> array(
+                $model->alias . '.' . $model->primaryKey => $model->id
+            ),
+		));
 
-		$audit_data = [
-			$model->alias => isset($data[$model->alias]) ? $data[$model->alias] : []
-		];
+		$audit_data = array(
+			$model->alias => isset($data[$model->alias]) ? $data[$model->alias] : array()
+		);
 
 		foreach ($this->settings[$model->alias]['habtm'] as $habtmModel) {
 			if (!array_key_exists($habtmModel, $model->hasAndBelongsToMany)) {
