@@ -4,29 +4,29 @@ App::uses('Model', 'Model');
 
 class Audit extends Model {
 
-	public $hasMany = [
-		'AuditDelta' => [
+	public $hasMany = array(
+		'AuditDelta' => array(
 			'className' => 'AuditLog.AuditDelta'
-		]
-	];
+		)
+	);
 
-	public $actsAs = [
+	public $actsAs = array(
 		'Containable'
-	];
+	);
 
-	public $order = [
+	public $order = array(
 		'Audit.id' => 'desc'
-	];
+	);
 
 	public $recursive = -1;
 
 	public function setupSearchPlugin() {
-		$this->filterArgs = [
-			'event' 		=> ['type' => 'value'],
-			'model' 		=> ['type' => 'value'],
-			'source_id' => ['type' => 'value'],
-			'entity_id' => ['type' => 'value'],
-		];
+		$this->filterArgs = array(
+			'event' 		=> array('type' => 'value'),
+			'model' 		=> array('type' => 'value'),
+			'source_id' => array('type' => 'value'),
+			'entity_id' => array('type' => 'value'),
+		);
 
 		$this->Behaviors->load('Search.Searchable');
 	}
