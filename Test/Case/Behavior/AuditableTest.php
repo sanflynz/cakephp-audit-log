@@ -9,13 +9,13 @@ class Article extends CakeTestModel {
 
   public $name = 'Article';
 
-  public $actsAs = [
-    'AuditLog.Auditable' => [
-      'ignore' => ['ignored_field']
-    ]
- 	];
+  public $actsAs = array(
+    'AuditLog.Auditable' => array(
+      'ignore' => array('ignored_field')
+    )
+ );
 
-  public $belongsTo = ['Author'];
+  public $belongsTo = array('Author');
 
 }
 
@@ -23,11 +23,11 @@ class Author extends CakeTestModel {
 
   public $name = 'Author';
 
-  public $actsAs = [
+  public $actsAs = array(
     'AuditLog.Auditable'
-	];
+	);
 
-  public $hasMany = ['Article'];
+  public $hasMany = array('Article');
 
 }
 
@@ -42,12 +42,12 @@ class AuditableBehaviorTest extends CakeTestCase {
  *
  * @var array
  */
-  public $fixtures = [
+  public $fixtures = array(
     'plugin.audit_log.article',
     'plugin.audit_log.author',
     'plugin.audit_log.audit',
     'plugin.audit_log.audit_delta',
-	];
+	);
 
   /**
    * Method executed before each test
