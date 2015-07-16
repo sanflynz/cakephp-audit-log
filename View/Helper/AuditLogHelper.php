@@ -4,7 +4,7 @@ App::uses('AppHelper', 'View/Helper');
 
 class AuditLogHelper extends AppHelper {
 
-	public $helpers = ['Text'];
+	public $helpers = array('Text');
 
 	public function getEvent($item) {
 		switch (strtolower($item['Audit']['event'])) {
@@ -54,11 +54,11 @@ class AuditLogHelper extends AppHelper {
 			$old = explode(',', $old);
 		}
 
-		$config = [
+		$config = array(
 			'ignoreNewLines' => true,
 			'ignoreWhitespace' => true,
 			'ignoreCase' => true
-		];
+		);
 
 		$diff = new Diff((array)$old, (array)$new, $config);
 		return $diff->render(new Diff_Renderer_Html_SideBySide());
