@@ -4,7 +4,7 @@ App::uses('AppHelper', 'View/Helper');
 
 class AuditLogHelper extends AppHelper {
 
-	public $helpers = array('Text');
+	public $helpers = array('Text', 'Html');
 
 	public function getEvent($item) {
 		switch (strtolower($item['Audit']['event'])) {
@@ -63,5 +63,31 @@ class AuditLogHelper extends AppHelper {
 		$diff = new Diff((array)$old, (array)$new, $config);
 		return $diff->render(new Diff_Renderer_Html_SideBySide());
 	}
+
+    public function getObjectDetails($json) {
+        if ( empty($json) ) {
+            return '';
+        }
+        $object = json_decode($json, true);
+        if ( empty($object) ) {
+            return '';
+        }
+        $recursive = function ($list) use (&$recursive) {
+            $html = '<ul>';
+            foreach ( $list as $key => $value ) {
+                if ( is_array($value) ) {
+                    $value = $recursive($value);
+                }
+                $html .= sprintf(
+                    '<li><strong>%s</strong>:%s</li>',
+                    $key,
+                    $value
+                );
+            }
+            $html .= '</ul>';
+            return $html;
+        };
+        return $recursive($object);
+    }
 
 }

@@ -99,6 +99,19 @@
 		</div>
 	</div>
 </div>
+<div class="box span3">
+	<div class="box-header well">
+		<strong><i class="halflings-icon list"></i><span class="break"></span><?= __('Object'); ?></strong>
+	</div>
+	<div class="box-content">
+		<div class="row-fluid">
+			<div class="span6"><?=
+			$this->AuditLog->getObjectDetails(
+				$audit['Audit']['json_object']
+			);?></div>
+		</div>
+	</div>
+</div>
 
 	<style type="text/css">
 	del {
