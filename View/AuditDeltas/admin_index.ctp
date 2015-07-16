@@ -10,7 +10,7 @@
   	<div class="col-md-12">
       <div class="actions">
         <div class="panel panel-default">
-          <div class="panel-heading">Ações</div>
+          <div class="panel-heading">Actions</div>
             <div class="panel-body">
               <ul class="nav nav-pills nav-stacked">
                 <li><?php
