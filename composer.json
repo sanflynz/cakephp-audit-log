@@ -1,5 +1,5 @@
 {
-  "name":"jippi/cakephp-audit-log",
+  "name":"rochamarcelo/cakephp-audit-log",
   "version": "1.0.0",
   "description":"A logging plugin for CakePHP. It takes a snapshot of the fully hydrated object after a change is complete and it also records each individual change in the case of an update action",
   "type":"cakephp-plugin",
