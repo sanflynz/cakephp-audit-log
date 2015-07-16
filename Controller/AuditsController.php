@@ -26,8 +26,6 @@ class AuditsController extends AuditLogAppController {
 	public function beforeFilter() {
 		parent::beforeFilter();
 
-		$this->Audit->setupSearchPlugin();
-
 		$this->Crud->on('beforeLookup', function($event) {
 			$this->Paginator->settings['group'] = $this->request->query('id_field');
 		});
@@ -46,6 +44,11 @@ class AuditsController extends AuditLogAppController {
 		);
         $request = $this->request;
         $self = $this;
+
+        $this->Prg->commonProcess();
+        $this->Paginator->settings['conditions'] = $this->Audit->parseCriteria(
+            $this->Prg->parsedParams()
+        );
 		$this->Crud->on('beforePaginate', function($event) use ($request, $self) {
 			if ($model = $request->query('model')) {
 				$Instance = ClassRegistry::init($model);

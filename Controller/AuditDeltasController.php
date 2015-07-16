@@ -23,14 +23,9 @@ class AuditDeltasController extends AuditLogAppController {
 
 	public function admin_index()
     {
-		parent::beforeFilter();
-
-		$this->AuditDelta->setupSearchPlugin();
-
-
-			if ($this->request->query('id_field') === 'property_name') {
-				$this->Paginator->settings['group'] = 'property_name';
-			}
+		if ($this->request->query('id_field') === 'property_name') {
+			$this->Paginator->settings['group'] = 'property_name';
+		}
 
 		$this->Paginator->settings['order'] = array(
 			'Audit.created' => 'asc'
@@ -50,8 +45,10 @@ class AuditDeltasController extends AuditLogAppController {
 				)
 			)
 		);
-        $this->Paginator->settings['finder'] = 'searchable';
-        $this->Paginator->settings += $this->Prg->parsedParams();
+        $this->Prg->commonProcess();
+        $this->Paginator->settings['conditions'] = $this->AuditDelta->parseCriteria(
+            $this->Prg->parsedParams()
+        );
         return $this->Crud->execute();
 
 	}

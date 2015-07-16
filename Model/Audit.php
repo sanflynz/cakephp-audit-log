@@ -10,26 +10,23 @@ class Audit extends Model {
 		)
 	);
 
-	public $actsAs = array(
-		'Containable'
-	);
+    public $actsAs = array(
+        'Containable',
+        'Search.Searchable'
+    );
 
 	public $order = array(
 		'Audit.id' => 'desc'
 	);
 
+    public $filterArgs = array(
+        'event'         => array('type' => 'value'),
+        'model'         => array('type' => 'value'),
+        'source_id' => array('type' => 'value'),
+        'entity_id' => array('type' => 'value'),
+    );
+
 	public $recursive = -1;
-
-	public function setupSearchPlugin() {
-		$this->filterArgs = array(
-			'event' 		=> array('type' => 'value'),
-			'model' 		=> array('type' => 'value'),
-			'source_id' => array('type' => 'value'),
-			'entity_id' => array('type' => 'value'),
-		);
-
-		$this->Behaviors->load('Search.Searchable');
-	}
 
 /**
  * Make sure not to include any join's in the COUNT(*) from paginator

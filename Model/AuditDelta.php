@@ -11,50 +11,46 @@ class AuditDelta extends Model {
 		)
 	);
 
-	public $actsAs = array('Containable');
+	public $actsAs = array(
+        'Containable',
+        'Search.Searchable'
+    );
 
 	public $recursive = -1;
 
-	public function setupSearchPlugin() {
-		$this->order = 'AuditDelta.property_name';
-
-		$this->filterArgs = array(
-			'source_id' => array(
-				'type' 	=> 'value',
-				'field' => 'Audit.source_id',
-				'model' => 'Audit',
-				'fields' => array(
-					'id' => 'source_id',
-					'label' => 'source_id',
-					'value' => 'source_id'
-				)
-			),
-			'model' => array(
-				'type' 	=> 'value',
-				'field' => 'Audit.model',
-				'model' => 'Audit',
-				'fields' => array(
-					'id' => 'model',
-					'label' => 'model',
-					'value' => 'model'
-				)
-			),
-			'entity_id' => array(
-				'type' 	=> 'value',
-				'field' => 'Audit.entity_id',
-				'model' => 'Audit',
-				'fields' => array(
-					'id' => 'entity_id',
-					'label' => 'entity_id',
-					'value' => 'entity_id'
-				)
-			),
-			'property_name' => array('type' => 'value'),
-			'old_value' 		=> array('type' => 'value'),
-			'new_value' 		=> array('type' => 'value'),
-		);
-
-		$this->Behaviors->load('Search.Searchable');
-	}
-
+    public $filterArgs = array(
+        'source_id' => array(
+            'type'  => 'value',
+            'field' => 'Audit.source_id',
+            'model' => 'Audit',
+            'fields' => array(
+                'id' => 'source_id',
+                'label' => 'source_id',
+                'value' => 'source_id'
+            )
+        ),
+        'model' => array(
+            'type'  => 'value',
+            'field' => 'Audit.model',
+            'model' => 'Audit',
+            'fields' => array(
+                'id' => 'model',
+                'label' => 'model',
+                'value' => 'model'
+            )
+        ),
+        'entity_id' => array(
+            'type'  => 'value',
+            'field' => 'Audit.entity_id',
+            'model' => 'Audit',
+            'fields' => array(
+                'id' => 'entity_id',
+                'label' => 'entity_id',
+                'value' => 'entity_id'
+            )
+        ),
+        'property_name' => array('type' => 'value'),
+        'old_value'         => array('type' => 'value'),
+        'new_value'         => array('type' => 'value'),
+    );
 }
