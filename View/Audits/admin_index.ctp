@@ -1,10 +1,19 @@
-<?php $this->extend('/Layouts/Partials/admin_index'); ?>
+<div class="audits list">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="page-header">
+        <h1>Audits</h1>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+  		<div class="panel-heading">
+    	 Audits
+  		</div>
+  		<div class="panel-body">
 
-<?php $this->start('title'); ?>
-	<h2><i class="icon-align-justify"></i><span class="break"></span>Audits</h2>
-<?php $this->end(); ?>
-
-<?php $this->start('main'); ?>
 	<table class="table table-striped bootstrap-datatable datatable">
 		<thead>
 		<tr>
@@ -18,18 +27,74 @@
 		</tr>
 		</thead>
 		<tbody>
-	<?php foreach ($items as $item): ?>
+	<?php foreach ($audits as $item): ?>
 		<tr>
 			<td><?= $this->AuditLog->getEvent($item); ?></td>
-			<td><?= $this->Html->link($this->AuditLog->getSource($item), ['action' => 'index', '?' => ['source_id' => $item['Audit']['source_id']]]); ?>&nbsp;</td>
-			<td><?= $this->Html->link($item['Audit']['model'], ['action' => 'index', '?' => ['model' => $item['Audit']['model']]]); ?></td>
-			<td><?= $this->Html->link($this->AuditLog->getIdentifier($item), ['action' => 'index', '?' => ['model' => $item['Audit']['model'], 'entity_id' => $item['Audit']['entity_id']]]); ?></td>
+			<td><?= $this->Html->link(
+				$this->AuditLog->getSource($item),
+				array(
+					'action' => 'index',
+					'?' => array(
+						'source_id' => $item['Audit']['source_id']
+					)
+				)
+			); ?>&nbsp;</td>
+			<td><?= $this->Html->link(
+				$item['Audit']['model'],
+				array(
+					'action' => 'index',
+					'?' => array(
+						'model' => $item['Audit']['model']
+					)
+				)
+			); ?></td>
+			<td><?= $this->Html->link(
+				$this->AuditLog->getIdentifier($item),
+				array(
+					'action' => 'index',
+					'?' => array(
+						'model' => $item['Audit']['model'],
+						'entity_id' => $item['Audit']['entity_id']
+					)
+				)
+			); ?></td>
 			<td><?= h($item['Audit']['delta_count']); ?>&nbsp;</td>
-			<td><span title="<?= h($item['Audit']['created']); ?>"><?= str_replace('on', '', $this->Time->timeAgoInWords($item['Audit']['created'])); ?></span></td>
+			<td><span title="<?= h($item['Audit']['created']); ?>"><?=
+				str_replace(
+					'on',
+					'',
+					$this->Time->timeAgoInWords(
+						$item['Audit']['created']
+					)
+				);
+			?></span></td>
 			<td class="actions">
-				<?= $this->Html->link('<i class="halflings-icon edit"></i>', ['plugin' => null, 'controller' => Inflector::underscore(Inflector::pluralize($item['Audit']['model'])), 'action' => 'edit', $item['Audit']['entity_id']], ['class' => 'btn btn-success', 'escape' => false]); ?>
-				<?= $this->Html->link('<i class="halflings-icon dashboard"></i>', ['controller' => 'audit_deltas', 'action' => 'index', '?' => ['model' => $item['Audit']['model'], 'entity_id' => $item['Audit']['entity_id']]], ['class' => 'btn btn-info', 'escape' => false]); ?>
-				<?= $this->Html->link('<i class="halflings-icon eye-open"></i>', ['action' => 'view', $item['Audit']['id']], ['class' => 'btn btn-default', 'escape' => false]); ?>
+			<?= $this->Html->link(
+				'<i class="halflings-icon dashboard"></i>',
+				array(
+					'controller' => 'audit_deltas',
+					'action' => 'index',
+					'?' => array(
+						'model' => $item['Audit']['model'],
+						'entity_id' => $item['Audit']['entity_id']
+					)
+				),
+				array(
+					'class' => 'btn btn-info',
+					'escape' => false
+				)
+			); ?>
+			<?= $this->Html->link(
+				'<i class="halflings-icon eye-open"></i>',
+				array(
+					'action' => 'view',
+					$item['Audit']['id']
+				),
+				array(
+					'class' => 'btn btn-default',
+					'escape' => false
+				)
+			); ?>
 			</td>
 		</tr>
 	<?php endforeach; ?>
@@ -40,5 +105,33 @@
 			<?= $this->Paginator->counter(array('format' => __('Page {:page} of {:pages}, showing {:start} to {:end} out of {:count}')));?>
 		</div>
 	</div>
-	<?php echo $this->Paginator->pagination(); ?>
-<?php $this->end(); ?>
+	<?php
+        $params = $this->Paginator->params();
+        if ($params['pageCount'] > 1) {
+        ?>
+        <ul class="pagination pagination-sm">
+            <?php
+                echo $this->Paginator->prev(
+                    '&larr; Anterior',
+                    array('class' => 'prev','tag' => 'li','escape' => false),
+                    '<a onclick="return false;">&larr; Anterior</a>',
+                    array('class' => 'prev disabled','tag' => 'li','escape' => false)
+                );
+                echo $this->Paginator->numbers(
+                    array('separator' => '','tag' => 'li','currentClass' => 'active','currentTag' => 'a')
+                );
+                echo $this->Paginator->next(
+                    'Próxima &rarr;',
+                    array('class' => 'next','tag' => 'li','escape' => false),
+                    '<a onclick="return false;">Próxima &rarr;</a>',
+                    array('class' => 'next disabled','tag' => 'li','escape' => false)
+                );
+            ?>
+        </ul>
+        <?php } ?>
+		</div>
+  	  </div>
+    </div><!-- end col md 12 -->
+  </div><!-- end row -->
+</div>
+

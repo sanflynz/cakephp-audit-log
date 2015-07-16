@@ -4,9 +4,22 @@ App::uses('AuditAppController', 'AuditLog.Controller');
 
 class AuditsController extends AuditLogAppController {
 
-	public $uses = ['AuditLog.Audit'];
+	public $uses = array('AuditLog.Audit');
 
-	public $helpers = ['AuditLog.AuditLog'];
+	public $helpers = array('AuditLog.AuditLog');
+
+    public $components = array(
+        'Crud.Crud' => array(
+            'actions' => array(
+                // The controller action 'index' will map to the IndexCrudAction
+                'admin_index' => 'Crud.Index',
+                // The controller action 'view' will map to the ViewCrudAction
+                'admin_view'  => 'Crud.View'
+            )
+        ),
+        'Search.Prg',
+        'Paginator'
+    );
 
 	public $presetVars = true;
 
@@ -21,7 +34,7 @@ class AuditsController extends AuditLogAppController {
 	}
 
 	public function admin_index() {
-		$this->Paginator->settings['fields'] = [
+		$this->Paginator->settings['fields'] = array(
 			'Audit.id',
 			'Audit.event',
 			'Audit.model',
@@ -30,24 +43,28 @@ class AuditsController extends AuditLogAppController {
 			'Audit.source_id',
 			'Audit.created',
 			'Audit.delta_count',
-		];
-
-		$this->Crud->on('beforePaginate', function($event) {
-			if ($model = $this->request->query('model')) {
+		);
+        $request = $this->request;
+        $self = $this;
+		$this->Crud->on('beforePaginate', function($event) use ($request, $self) {
+			if ($model = $request->query('model')) {
 				$Instance = ClassRegistry::init($model);
 
 				$displayField = $Instance->displayField;
-				$this->Paginator->settings['do_count'] = empty($Instance->noAuditCount);
-				$this->Paginator->settings['fields'][] = $model . '.' . $displayField;
-				$this->Paginator->settings['joins'][] = [
+				$self->Paginator->settings['do_count'] = empty($Instance->noAuditCount);
+				$self->Paginator->settings['fields'][] = $model . '.' . $displayField;
+				$self->Paginator->settings['joins'][] = array(
 					'alias' => $model,
 					'table' => $Instance->useTable,
-					'conditions' => [$Instance->alias . '.id = Audit.entity_id'],
+					'conditions' => array(
+                        $Instance->alias . '.id = Audit.entity_id'
+                    ),
 					'type' => 'INNER'
-				];
+				);
 
-				$this->set(compact('model', 'displayField'));
+				$self->set(compact('model', 'displayField'));
 			}
+            $self->Paginator->settings['do_count'] = true;
 		});
 
 		return $this->Crud->execute();

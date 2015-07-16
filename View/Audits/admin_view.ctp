@@ -1,78 +1,105 @@
-<?php $this->extend('/Layouts/Partials/admin_view'); ?>
-<?php $this->start('main'); ?>
+<div class="usuarios form">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="page-header">
+        <strong><?= __('Deal');?></strong>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+  	<div class="col-md-3">
+      <div class="actions">
+        <div class="panel panel-default">
+          <div class="panel-heading">Ações</div>
+            <div class="panel-body">
+              <ul class="nav nav-pills nav-stacked">
+                <li><?php
+                echo $this->Html->link(
+                  '<span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;Audits',
+                  array('action' => 'index'),
+                  array('escape' => false)
+                ); ?></li>
+
+              </ul>
+            </div><!-- end body -->
+        </div><!-- end panel -->
+      </div><!-- end actions -->
+    </div><!-- end col md 3 -->
+    <div class="col-md-9">
+      <div class="panel panel-default">
+  		<div class="panel-heading">
+    	 <strong><?= __('Deal');?></strong>
+  		</div>
+  		<div class="panel-body">
+
 <div class="box span9">
-	<div class="box-header">
-		<h2><?= __('Deal');?></h2>
-	</div>
 	<div class="box-content">
 		<div class="row-fluid">
 			<div class="span6">
 				<div class="page-header">
-					<h1><?= __('Event type'); ?></h1>
+					<strong><?= __('Event type'); ?></strong>
 				</div>
-				<p><?= h($item['Audit']['event']); ?></p>
+				<p><?= h($audit['Audit']['event']); ?></p>
 			</div>
 			<div class="span6">
 				<div class="page-header">
-					<h1><?= __('Model'); ?></h1>
+					<strong><?= __('Model'); ?></strong>
 				</div>
-				<p><?= h($item['Audit']['model']); ?></p>
-			</div>
-		</div>
-		<div class="row-fluid">
-			<div class="span6">
-				<div class="page-header">
-					<h1><?= __('Model id'); ?></h1>
-				</div>
-				<p><?= h($item['Audit']['entity_id']); ?></p>
-			</div>
-			<div class="span6">
-				<div class="page-header">
-					<h1><?= __('Description'); ?></h1>
-				</div>
-				<p><?= h($item['Audit']['description']); ?></p>
+				<p><?= h($audit['Audit']['model']); ?></p>
 			</div>
 		</div>
 		<div class="row-fluid">
 			<div class="span6">
 				<div class="page-header">
-					<h1><?= __('Source'); ?></h1>
+					<strong><?= __('Model id'); ?></strong>
 				</div>
-				<p><?= h($item['Audit']['source_id']); ?></p>
+				<p><?= h($audit['Audit']['entity_id']); ?></p>
+			</div>
+			<div class="span6">
+				<div class="page-header">
+					<strong><?= __('Description'); ?></strong>
+				</div>
+				<p><?= h($audit['Audit']['description']); ?></p>
+			</div>
+		</div>
+		<div class="row-fluid">
+			<div class="span6">
+				<div class="page-header">
+					<strong><?= __('Source'); ?></strong>
+				</div>
+				<p><?= h($audit['Audit']['source_id']); ?></p>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="box span3">
 	<div class="box-header well">
-		<h2><i class="halflings-icon list"></i><span class="break"></span><?= __('In Time'); ?></h2>
+		<strong><i class="halflings-icon list"></i><span class="break"></span><?= __('In Time'); ?></strong>
 	</div>
 	<div class="box-content">
 		<div class="row-fluid">
 			<div class="span4"><strong><?= __('Created'); ?> </strong></div>
-			<div class="span8"><?= $this->Time->format($item['Audit']['created'], '%c', '-'); ?></div>
+			<div class="span8"><?= $this->Time->format($audit['Audit']['created'], '%c', '-'); ?></div>
 		</div>
 	</div>
 </div>
 
 <div class="box span3">
 	<div class="box-header well">
-		<h2><i class="halflings-icon list"></i><span class="break"></span><?= __('In Numbers'); ?></h2>
+		<strong><i class="halflings-icon list"></i><span class="break"></span><?= __('In Numbers'); ?></strong>
 	</div>
 	<div class="box-content">
 		<div class="row-fluid">
 			<div class="span6"><strong><?= __('Id'); ?></strong></div>
-			<div class="span6"><?= $item['Audit']['id']; ?></div>
+			<div class="span6"><?= $audit['Audit']['id']; ?></div>
 		</div>
 		<div class="row-fluid">
 			<div class="span6"><strong><?= __('Deltas'); ?> </strong></div>
-			<div class="span6"><?= $this->Number->format($item['Audit']['delta_count']); ?></div>
+			<div class="span6"><?= $this->Number->format($audit['Audit']['delta_count']); ?></div>
 		</div>
 	</div>
 </div>
-<?php $this->end(); ?>
 
-<?php $this->start('associated'); ?>
 	<style type="text/css">
 	del {
 		background-color: #f2dede;
@@ -139,11 +166,11 @@
 
 	</style>
 
-	<?php if (!empty($item['AuditDelta'])):?>
+	<?php if (!empty($audit['AuditDelta'])):?>
 	<div class="row-fluid">
 		<div class="box span12">
 			<div class="box-header well">
-				<h2><i class="halflings-icon list"></i><span class="break"></span><?= __('Categorize Logs'); ?></h2>
+				<strong><i class="halflings-icon list"></i><span class="break"></span><?= __('Categorize Logs'); ?></strong>
 			</div>
 			<div class="box-content">
 				<table class="table table-conpact">
@@ -154,7 +181,7 @@
 					</tr>
 				</thead>
 				<tbody>
-				<?php foreach ($item['AuditDelta'] as $it) : ?>
+				<?php foreach ($audit['AuditDelta'] as $it) : ?>
 					<tr>
 						<td><?= $it['property_name'];?></td>
 						<td><?= $this->AuditLog->getDiff($it['property_name'], $it['new_value'], $it['old_value']); ?></td>
@@ -166,4 +193,9 @@
 	</div>
 </div>
 <?php endif; ?>
-<?php $this->end(); ?>
+		</div>
+  	  </div>
+    </div><!-- end col md 12 -->
+  </div><!-- end row -->
+</div>
+
