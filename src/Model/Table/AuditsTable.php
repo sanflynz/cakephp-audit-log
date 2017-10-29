@@ -58,6 +58,6 @@ class AuditsTable extends Table
             ],
         ];
 
-        $this->addBehavior('Search.Searc');
+        $this->addBehavior('Search.Search');
     }
 }
