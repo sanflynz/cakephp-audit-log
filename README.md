@@ -18,33 +18,41 @@ Based on the Original AuditLog plugin for CakePHP 2.x found [here](https://githu
 ## Installation
 
 ### Composer
-
+Package does not exist but can install from GitHub.  Add to app composer.json 
 ```
-  $ composer install zikani03/cakephp-audit-log
+  {  
+	"repositories": [  
+		{  
+			"type": "vcs",  
+			"url": "https://github.com/sanflynz/cakephp-audit-log/" 
+ 
+		} 
+	],  
+	"require": {  
+		"jippi/cakephp-audit-log": "dev-master"  
+	} , 
+	"minimum-stability": "dev" 
+} 
 ```
 
 ### Manually
 
 1. Click the big ol' **Downloads** button next to the project description.
 2. Extract the archive to `src/plugins/AuditLog`.
+(but how to do the composer.json dependencies?
 
 ### Enable the plugin
 
-In your application's `bootstrap.php` (ie src/config/bootstrap.php) add the following line ```Plugin::load('AuditLog')```
+In your application's `bootstrap.php` (ie src/config/bootstrap.php) add the following line 
+```Plugin::load('AuditLog', ['routes' => true]);```
 
 ## Migrations
 
 Before you can use the plugin you need to have the tables for storing revisions (`AuditLogs`) and deltas (`AuditLogDeltas`).
-To create the tables you can use the CakePHP 3.0 Migrations shell. Here is how:
-
-1. Copy the migrations from `/path/to/plugin/config/Migrations` to your `src/config/Migrations/` directory
-   
-> If you installed via composer you need to look at `vendor/zikani03/cakephp-audit-log/config/Migrations`, if you installed the plugin manually you should look under `plugins/AuditLog/config/Migrations`
-   
-2. run the migrations with the following command
+To create the tables you can use the CakePHP 3.0 Migrations shell. Run the migrations with the following command:
 
 ```
-  $ bin/cake migrations migrate
+  $ bin/cake migrations migrate -p AuditLog
 ```
 Make sure you have privileges to create tables in your database otherwise this probably won't work ;)
 
