@@ -73,6 +73,6 @@ class AuditDeltasTable extends Table
             'new_value'         => ['type' => 'value'],
         ];
 
-        $this->addBehavior('Search.Searchable');
+        $this->addBehavior('Search.Search');
     }
 }
