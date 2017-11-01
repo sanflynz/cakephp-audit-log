@@ -26,13 +26,19 @@ class AuditsTable extends Table
         $this->table('audits');
         $this->displayField('id');
         $this->primaryKey('id');
+
         $this->addBehavior('Timestamp');
+        
+        $this->addBehavior('Muffin/Footprint.Footprint');
 
         $this->hasMany('AuditDeltas', [
             'foreignKey' => 'audit_id',
             'className' => 'AuditLog.AuditDeltas'
         ]);
+
         $this->setupSearchPlugin();
+
+
     }
 
 
@@ -58,6 +64,6 @@ class AuditsTable extends Table
             ],
         ];
 
-        $this->addBehavior('Search.Searchable');
+        $this->addBehavior('Search.Search');
     }
 }

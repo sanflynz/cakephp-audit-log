@@ -139,10 +139,11 @@ class AuditableBehavior extends Behavior
             'event' => $entity->isNew() ? 'CREATE' : 'EDIT',
             'model' => $alias,
             'entity_id' => $entity->get($config['id']),
-            'source_id' => $source['id'],
+            //'source_id' => $source['id'],
+            //'source_id' => 'user id here',
             'source_ip' => $source['ip'],
             'source_url' => $source['url'],
-            'description' => $source['description']
+            //'description' => $source['description']
         ];
 
         if (!empty($config['json_object'])) {

@@ -8,12 +8,13 @@ trait CurrentUserTrait
     public function currentUser()
     {
         $request = Request::createFromGlobals();
-        $session = $request->session();
+        //$session = $request->session();
         return [
-            'id' => $session->read('Auth.User.username'),
+            //'id' => $session->read('Auth.User.username'),
             'ip' => $request->env('REMOTE_ADDR'),
             'url' => $request->here(),
-            'description' => $session->read('Auth.User.username'),
+            //'description' => $session->read('Auth.User.username'),
+            //'description' => $this->Auth->user('id'),
         ];
     }
 }

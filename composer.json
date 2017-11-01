@@ -31,7 +31,8 @@
     "cakephp/cakephp": "~3.0",
     "friendsofcake/search":"~1.0",
     "friendsofcake/crud":"~4.0",
-    "phpspec/php-diff":"dev-master"
+    "phpspec/php-diff":"dev-master",
+    "muffin/footprint": "^1.1"  
   },
   "require-dev": {
     "phpunit/phpunit": "*"

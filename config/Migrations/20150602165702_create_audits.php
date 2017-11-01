@@ -44,7 +44,7 @@ class CreateAudits extends AbstractMigration
             'default' => null,
             'null' => true,
         ]);
-        $table->addColumn('source_id', 'string', [
+        $table->addColumn('created_by', 'string', [
             'default' => null,
             'limit' => 255,
             'null' => true,

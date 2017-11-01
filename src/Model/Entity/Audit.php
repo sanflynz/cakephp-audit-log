@@ -20,7 +20,7 @@ class Audit extends Entity
         'entity_id' => true,
         'json_object' => true,
         'description' => true,
-        'source_id' => true,
+        'created_by' => true,
         'delta_count' => true,
         'source_ip' => true,
         'source_url' => true,

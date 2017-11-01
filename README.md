@@ -17,11 +17,16 @@ Based on the Original AuditLog plugin for CakePHP 2.x found [here](https://githu
 
 ## Installation
 
-### Composer
+### Composer  (THIS DOES NOT WORK)
 
 ```
+  
   $ composer install zikani03/cakephp-audit-log
 ```
+
+### GitHub
+Fork and clone
+
 
 ### Manually
 
@@ -35,16 +40,10 @@ In your application's `bootstrap.php` (ie src/config/bootstrap.php) add the foll
 ## Migrations
 
 Before you can use the plugin you need to have the tables for storing revisions (`AuditLogs`) and deltas (`AuditLogDeltas`).
-To create the tables you can use the CakePHP 3.0 Migrations shell. Here is how:
-
-1. Copy the migrations from `/path/to/plugin/config/Migrations` to your `src/config/Migrations/` directory
-   
-> If you installed via composer you need to look at `vendor/zikani03/cakephp-audit-log/config/Migrations`, if you installed the plugin manually you should look under `plugins/AuditLog/config/Migrations`
-   
-2. run the migrations with the following command
+To create the tables you can use the CakePHP 3.0 Migrations shell. Run the migrations with the following command
 
 ```
-  $ bin/cake migrations migrate
+  $ bin/cake migrations migrate -p AuditLog
 ```
 Make sure you have privileges to create tables in your database otherwise this probably won't work ;)
 
@@ -64,6 +63,23 @@ Applying the `AuditableBehavior` to a model is essentially the same as applying 
       }
       
     }
+
+### Trait
+
+You will need to include the `Muffin\Footprint\Auth\FootprintAwareTrait` to your `AppController`:
+
+```php
+use Muffin\Footprint\Auth\FootprintAwareTrait;
+
+class AppController extends Controller
+{
+    use FootprintAwareTrait;
+}
+```
+
+This will attach the `Muffin\Footprint\Event\FootprintListener` to models
+which will inject the currently logged in user's instance on `Model.beforeSave`
+and `Model.beforeFind` in the `_footprint` key of `$options`.
 
 ### Configuration
     
